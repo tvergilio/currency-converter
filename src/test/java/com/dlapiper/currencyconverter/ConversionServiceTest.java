@@ -71,7 +71,7 @@ class ConversionServiceTest {
     }
 
     @Test
-    void testConvertToGBPWithValidCurrencyCode() throws IOException {
+    void testConvertToGBPWithValidCurrencyCode() {
         // Act
         double convertedAmount = conversionService.convertToGBP("USD", 100);
 
@@ -80,7 +80,7 @@ class ConversionServiceTest {
     }
 
     @Test
-    void testConvertToGBPWithInvalidCurrencyCode() throws IOException {
+    void testConvertToGBPWithInvalidCurrencyCode() {
 
         // Act and Assert
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
@@ -98,7 +98,7 @@ class ConversionServiceTest {
             filesMockedStatic.when(() -> Files.lines(any())).thenThrow(IOException.class);
 
             // Act and Assert
-            var exception = assertThrows(ExchangeRateNotFoundException.class,
+            assertThrows(ExchangeRateNotFoundException.class,
                     () -> mockConverter.convertToGBP("USD", 100));
             // Assert the exception message or handle it as needed
         }

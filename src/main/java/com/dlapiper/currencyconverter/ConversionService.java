@@ -23,10 +23,6 @@ public class ConversionService {
         this.conversionRates = conversionRates;
     }
 
-    public void setConversionRates(Map<String, Double> conversionRates) {
-        this.conversionRates = conversionRates;
-    }
-
     private void loadExchangeRatesFromCsv() {
         try {
             this.conversionRates = Files.lines(ResourceUtils.getFile(csvFilePath).toPath())
