@@ -1,0 +1,55 @@
+1696262207513:hello-world
+1696262456145:hello-world --arg boot
+1696263692936:convert
+1696265494758:3.5
+1696265499560:3.40
+1696265563668:convert
+1696265566114:3.5
+1696265657932:convert
+1696266208239:package com.dlapiper.currencyconverter;
+1696266208239:import org.springframework.shell.Availability;
+1696266208255:import org.springframework.shell.standard.ShellComponent;
+1696266208255:import org.springframework.shell.standard.ShellMethod;
+1696266208255:import org.springframework.shell.standard.ShellMethodAvailability;
+1696266208255:@ShellComponent
+1696266208255:public class Commands {
+1696266208333:}
+1696266227500:convert
+1696266727462:convert 3.5
+1696268945525:convert
+1696269590618:setSource EUR
+1696269599126:set source EUR
+1696269607058:set target USD
+1696269615970:set amount 3.5
+1696269617630:convert
+1696269668087:help
+1696269710328:help set source
+1696269895644:convert 2.50 USD EUR
+1696269940220:convert 3.5 USD EUR
+1696269960733:set source 2.0
+1696269968051:set source USD
+1696269970761:set target EUR
+1696269976888:set amount 2.0
+1696269978396:convert
+1696270073364:setSource EUR
+1696270076991:set source EUR
+1696270082119:set target USD
+1696270085590:set amount 2.0
+1696270086819:convert
+1696270488918:convert EUR USD 2.0
+1696270594927:convert USD EUR 2.0
+1696270665840:convert EUR USD 2.0
+1696270847256:convert USD EUR 2.0
+1696270852334:set source USD
+1696270856554:set target EUR
+1696270860650:set amound 3.0
+1696270865257:set amount 3.0
+1696270866759:convert
+1696270869792:run
+1696271376607:convert EUR USD 3.0
+1696271384807:convert USD EUR 3.0
+1696271389993:set source USD
+1696271392743:set target EUR
+1696271397422:convert 6.0
+1696271404091:set amount 6.0
+1696271405562:run
