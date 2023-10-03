@@ -23,7 +23,7 @@ public class ConversionService {
         this.conversionRates = conversionRates;
     }
 
-    private void loadExchangeRatesFromCsv() {
+    void loadExchangeRatesFromCsv() {
         try {
             this.conversionRates = Files.lines(ResourceUtils.getFile(csvFilePath).toPath())
                     .map(line -> line.split(","))
@@ -37,33 +37,42 @@ public class ConversionService {
         }
     }
 
-    public double convertCurrency(String sourceCurrencyCode, String targetCurrencyCode, double amount) {
-        // Implement your actual currency conversion logic here
-        // This is just a placeholder logic, replace it with your real conversion logic
-        if (sourceCurrencyCode.equals("USD") && targetCurrencyCode.equals("EUR")) {
-            return amount * 0.85; // Placeholder conversion rate, actual rates will vary
-        } else {
-            throw new UnsupportedOperationException("Conversion not supported for provided currencies.");
+    public double convertCurrency(String sourceCurrency, String targetCurrency, double amount) {
+        validateCurrency(sourceCurrency);
+        validateCurrency(targetCurrency);
+
+        if (sourceCurrency.equalsIgnoreCase(targetCurrency)) {
+            return amount; // No conversion needed if source and target currencies are the same
+        }
+
+        double sourceAmountInGBP;
+        sourceAmountInGBP = sourceCurrency.equalsIgnoreCase("GBP") ? amount : convertToGBP(sourceCurrency, amount);
+
+        return targetCurrency.equalsIgnoreCase("GBP") ?
+                sourceAmountInGBP :
+                convertFromGBP(sourceAmountInGBP, targetCurrency);
+    }
+
+    void validateCurrency(String currencyCode) {
+        if (!Currency.getAvailableCurrencies().stream()
+                .anyMatch(c -> c.getCurrencyCode().equalsIgnoreCase(currencyCode))) {
+            throw new IllegalArgumentException("Invalid currency code: " + currencyCode);
         }
     }
 
     double convertToGBP(String currencyCode, double amount) {
-        if (conversionRates == null) {
-            throw new ExchangeRateNotFoundException("Conversion rates not loaded.");
-        }
-        // Perform currency conversion to GBP
-        if (conversionRates.containsKey(currencyCode)) {
-            double rateToGBP = conversionRates.get(currencyCode);
-            return amount * rateToGBP;
-        } else {
+        if (!conversionRates.containsKey(currencyCode)) {
             throw new IllegalArgumentException("Conversion rate not found for currency code: " + currencyCode);
         }
+        double rateToGBP = conversionRates.get(currencyCode);
+        return amount / rateToGBP;
     }
 
-    boolean validateCurrency(String currencyCode) {
-        return Currency.getAvailableCurrencies()
-                .stream()
-                .anyMatch(c -> c.getCurrencyCode().equalsIgnoreCase(currencyCode));
+    double convertFromGBP(double sourceAmountInGBP, String targetCurrency) {
+        if (!conversionRates.containsKey(targetCurrency)) {
+            throw new IllegalArgumentException("Conversion rate not found for currency code: " + targetCurrency);
+        }
+        double rateFromGBP = conversionRates.get(targetCurrency);
+        return sourceAmountInGBP * rateFromGBP;
     }
-
 }

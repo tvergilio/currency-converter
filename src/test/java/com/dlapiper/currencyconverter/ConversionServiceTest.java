@@ -35,39 +35,43 @@ class ConversionServiceTest {
         mockConversionRates.put("EUR", 1.16);
         mockConversionRates.put("AED", 4.54);
 
-        // Stubbing the behavior of conversionService.getConversionRates()
-        // when the method is called
+        // Creating the ConversionService instance with mock conversion rates
         conversionService = new ConversionService(mockConversionRates);
     }
 
     @Test
     public void testValidCurrency() {
-        assertTrue(conversionService.validateCurrency("USD"));
+        assertDoesNotThrow(() -> conversionService.validateCurrency("USD"));
     }
 
     @Test
     public void testInvalidCurrency() {
-        assertFalse(conversionService.validateCurrency("INVALID"));
+        assertThrows(IllegalArgumentException.class, () -> conversionService.validateCurrency("INVALID"));
     }
 
     @Test
     public void testUpperCaseCurrencyCode() {
-        assertTrue(conversionService.validateCurrency("eur"));
+        assertDoesNotThrow(() -> conversionService.validateCurrency("EUR"));
     }
 
     @Test
     public void testLowerCaseCurrencyCode() {
-        assertTrue(conversionService.validateCurrency("usd"));
+        assertDoesNotThrow(() -> conversionService.validateCurrency("usd"));
     }
 
     @Test
     public void testNullCurrencyCode() {
-        assertFalse(conversionService.validateCurrency(null));
+        assertThrows(IllegalArgumentException.class, () -> conversionService.validateCurrency(null));
     }
 
     @Test
     public void testEmptyCurrencyCode() {
-        assertFalse(conversionService.validateCurrency(""));
+        assertThrows(IllegalArgumentException.class, () -> conversionService.validateCurrency(""));
+    }
+
+    @Test
+    public void testInvalidCurrencyCode() {
+        assertThrows(IllegalArgumentException.class, () -> conversionService.validateCurrency("123"));
     }
 
     @Test
@@ -76,7 +80,7 @@ class ConversionServiceTest {
         double convertedAmount = conversionService.convertToGBP("USD", 100);
 
         // Assert
-        assertEquals(123.0, convertedAmount);
+        assertEquals(81.30, convertedAmount, 0.01);
     }
 
     @Test
@@ -84,22 +88,29 @@ class ConversionServiceTest {
 
         // Act and Assert
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> conversionService.convertToGBP("USX", 100));
-        assertEquals("Conversion rate not found for currency code: USX", exception.getMessage());
+                () -> conversionService.convertToGBP("POTATO", 100));
+        assertEquals("Conversion rate not found for currency code: POTATO", exception.getMessage());
+    }
+    @Test
+    void testConvertToGBPWithUnsupportedCurrencyCode() {
+
+        // Act and Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> conversionService.convertToGBP("MYR", 100));
+        assertEquals("Conversion rate not found for currency code: MYR", exception.getMessage());
     }
 
     @Test
-    void testConvertToGBPWithIOException() {
+    void testLoadConversionRatesFromCsvWithIOException() {
         // Arrange
-        ConversionService mockConverter = mock(ConversionService.class);
-        when(mockConverter.convertToGBP("USD", 100)).thenCallRealMethod(); // Call the real method
+        ConversionService spyConverter = spy(new ConversionService()); // Create a new spy instance of ConversionService
 
         try (MockedStatic<Files> filesMockedStatic = mockStatic(Files.class)) {
             filesMockedStatic.when(() -> Files.lines(any())).thenThrow(IOException.class);
 
             // Act and Assert
             assertThrows(ExchangeRateNotFoundException.class,
-                    () -> mockConverter.convertToGBP("USD", 100));
+                    spyConverter::loadExchangeRatesFromCsv);
             // Assert the exception message or handle it as needed
         }
     }
