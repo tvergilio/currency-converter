@@ -55,8 +55,8 @@ public class ConversionService {
     }
 
     void validateCurrency(String currencyCode) {
-        if (!Currency.getAvailableCurrencies().stream()
-                .anyMatch(c -> c.getCurrencyCode().equalsIgnoreCase(currencyCode))) {
+        if (Currency.getAvailableCurrencies().stream()
+                .noneMatch(c -> c.getCurrencyCode().equalsIgnoreCase(currencyCode))) {
             throw new IllegalArgumentException("Invalid currency code: " + currencyCode);
         }
     }

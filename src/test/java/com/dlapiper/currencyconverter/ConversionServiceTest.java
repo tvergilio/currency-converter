@@ -111,9 +111,8 @@ class ConversionServiceTest {
         var targetCurrency = "USD";
 
         // Act and Assert
-        var exception = assertThrows(IllegalArgumentException.class, () -> {
-            conversionService.convertCurrency(sourceCurrency, targetCurrency, sourceAmountInGBP);
-        });
+        var exception = assertThrows(IllegalArgumentException.class,
+                () -> conversionService.convertCurrency(sourceCurrency, targetCurrency, sourceAmountInGBP));
 
         assertEquals("Invalid amount: -100.0", exception.getMessage());
     }
