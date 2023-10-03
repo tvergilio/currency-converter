@@ -23,6 +23,23 @@ public class ConversionService {
         this.conversionRates = conversionRates;
     }
 
+    public double convertCurrency(String sourceCurrency, String targetCurrency, double amount) {
+        validateCurrency(sourceCurrency);
+        validateCurrency(targetCurrency);
+        validateAmount(amount);
+
+        if (sourceCurrency.equalsIgnoreCase(targetCurrency)) {
+            return amount; // No conversion needed if source and target currencies are the same
+        }
+
+        double sourceAmountInGBP;
+        sourceAmountInGBP = sourceCurrency.equalsIgnoreCase("GBP") ? amount : convertToGBP(sourceCurrency, amount);
+
+        return targetCurrency.equalsIgnoreCase("GBP") ?
+                sourceAmountInGBP :
+                convertFromGBP(sourceAmountInGBP, targetCurrency);
+    }
+
     void loadExchangeRatesFromCsv() {
         try {
             this.conversionRates = Files.lines(ResourceUtils.getFile(csvFilePath).toPath())
@@ -37,22 +54,6 @@ public class ConversionService {
         }
     }
 
-    public double convertCurrency(String sourceCurrency, String targetCurrency, double amount) {
-        validateCurrency(sourceCurrency);
-        validateCurrency(targetCurrency);
-
-        if (sourceCurrency.equalsIgnoreCase(targetCurrency)) {
-            return amount; // No conversion needed if source and target currencies are the same
-        }
-
-        double sourceAmountInGBP;
-        sourceAmountInGBP = sourceCurrency.equalsIgnoreCase("GBP") ? amount : convertToGBP(sourceCurrency, amount);
-
-        return targetCurrency.equalsIgnoreCase("GBP") ?
-                sourceAmountInGBP :
-                convertFromGBP(sourceAmountInGBP, targetCurrency);
-    }
-
     void validateCurrency(String currencyCode) {
         if (!Currency.getAvailableCurrencies().stream()
                 .anyMatch(c -> c.getCurrencyCode().equalsIgnoreCase(currencyCode))) {
@@ -60,7 +61,13 @@ public class ConversionService {
         }
     }
 
-    double convertToGBP(String currencyCode, double amount) {
+    private void validateAmount(double amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Invalid amount: " + amount);
+        }
+    }
+
+    private double convertToGBP(String currencyCode, double amount) {
         if (!conversionRates.containsKey(currencyCode)) {
             throw new IllegalArgumentException("Conversion rate not found for currency code: " + currencyCode);
         }
@@ -68,7 +75,7 @@ public class ConversionService {
         return amount / rateToGBP;
     }
 
-    double convertFromGBP(double sourceAmountInGBP, String targetCurrency) {
+    private double convertFromGBP(double sourceAmountInGBP, String targetCurrency) {
         if (!conversionRates.containsKey(targetCurrency)) {
             throw new IllegalArgumentException("Conversion rate not found for currency code: " + targetCurrency);
         }

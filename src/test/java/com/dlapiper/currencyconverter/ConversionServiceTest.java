@@ -50,8 +50,8 @@ class ConversionServiceTest {
     }
 
     @Test
-    public void testUpperCaseCurrencyCode() {
-        assertDoesNotThrow(() -> conversionService.validateCurrency("EUR"));
+    public void testMixedCaseCurrencyCode() {
+        assertDoesNotThrow(() -> conversionService.validateCurrency("EuR"));
     }
 
     @Test
@@ -70,14 +70,63 @@ class ConversionServiceTest {
     }
 
     @Test
-    public void testInvalidCurrencyCode() {
+    public void testNumericCurrencyCode() {
         assertThrows(IllegalArgumentException.class, () -> conversionService.validateCurrency("123"));
     }
 
     @Test
-    void testConvertToGBPWithValidCurrencyCode() {
+    void testConvertCurrencyWithValidConversion() {
+        // Arrange
+        var sourceCurrency = "USD";
+        var targetCurrency = "EUR";
+        var amount = 100;
+
         // Act
-        double convertedAmount = conversionService.convertToGBP("USD", 100);
+        var convertedAmount = conversionService.convertCurrency(sourceCurrency, targetCurrency, amount);
+
+        // Assert
+        assertEquals(94.30, convertedAmount, 0.01);
+    }
+
+    @Test
+    void testConvertCurrencyWithInvalidTargetCurrency() {
+        // Arrange
+        var sourceAmountInGBP = 100;
+        var sourceCurrency = "USD";
+        var targetCurrency = "POTATO";
+
+        // Act and Assert
+        var exception = assertThrows(IllegalArgumentException.class, () -> {
+            conversionService.convertCurrency(sourceCurrency, targetCurrency, sourceAmountInGBP);
+        });
+
+        assertEquals("Invalid currency code: POTATO", exception.getMessage());
+    }
+
+    @Test
+    void testConvertCurrencyWithInvalidAmount() {
+        // Arrange
+        var sourceAmountInGBP = -100;
+        var sourceCurrency = "GBP";
+        var targetCurrency = "USD";
+
+        // Act and Assert
+        var exception = assertThrows(IllegalArgumentException.class, () -> {
+            conversionService.convertCurrency(sourceCurrency, targetCurrency, sourceAmountInGBP);
+        });
+
+        assertEquals("Invalid amount: -100.0", exception.getMessage());
+    }
+
+    @Test
+    void testConvertToGBPWithValidCurrencyCode() {
+        // Arrange
+        var sourceCurrency = "USD";
+        var targetCurrency = "GBP";
+        var sourceAmountInUSD = 100;
+
+        // Act
+        var convertedAmount = conversionService.convertCurrency(sourceCurrency, targetCurrency, sourceAmountInUSD);
 
         // Assert
         assertEquals(81.30, convertedAmount, 0.01);
@@ -85,25 +134,49 @@ class ConversionServiceTest {
 
     @Test
     void testConvertToGBPWithInvalidCurrencyCode() {
+        //Arrange
+        var sourceCurrency = "POTATO";
+        var targetCurrency = "GBP";
+        var sourceAmount = 100;
 
         // Act and Assert
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> conversionService.convertToGBP("POTATO", 100));
-        assertEquals("Conversion rate not found for currency code: POTATO", exception.getMessage());
+        var exception = assertThrows(IllegalArgumentException.class,
+                () -> conversionService.convertCurrency(sourceCurrency, targetCurrency, sourceAmount));
+        assertEquals("Invalid currency code: POTATO", exception.getMessage());
     }
+
     @Test
     void testConvertToGBPWithUnsupportedCurrencyCode() {
+        //Arrange
+        var sourceCurrency = "MYR";
+        var targetCurrency = "GBP";
+        var sourceAmountInMYR = 100;
 
         // Act and Assert
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> conversionService.convertToGBP("MYR", 100));
+        var exception = assertThrows(IllegalArgumentException.class,
+                () -> conversionService.convertCurrency(sourceCurrency, targetCurrency, sourceAmountInMYR));
         assertEquals("Conversion rate not found for currency code: MYR", exception.getMessage());
+    }
+
+
+    @Test
+    void testConvertCurrencyWithSameCurrencies() {
+        // Arrange
+        var sourceCurrency = "USD";
+        var targetCurrency = "USD";
+        var amount = 100;
+
+        // Act
+        var convertedAmount = conversionService.convertCurrency(sourceCurrency, targetCurrency, amount);
+
+        // Assert
+        assertEquals(100, convertedAmount);
     }
 
     @Test
     void testLoadConversionRatesFromCsvWithIOException() {
         // Arrange
-        ConversionService spyConverter = spy(new ConversionService()); // Create a new spy instance of ConversionService
+        var spyConverter = spy(new ConversionService()); // Create a new spy instance of ConversionService
 
         try (MockedStatic<Files> filesMockedStatic = mockStatic(Files.class)) {
             filesMockedStatic.when(() -> Files.lines(any())).thenThrow(IOException.class);
@@ -111,7 +184,6 @@ class ConversionServiceTest {
             // Act and Assert
             assertThrows(ExchangeRateNotFoundException.class,
                     spyConverter::loadExchangeRatesFromCsv);
-            // Assert the exception message or handle it as needed
         }
     }
 }

@@ -19,12 +19,18 @@ public class Commands {
 
     @ShellMethod(key = "set source", value = "Set source ISO 4217 currency code")
     public void setSource(String sourceCurrencyCode) {
-        this.sourceCurrencyCode = sourceCurrencyCode;
+        if (sourceCurrencyCode == null) {
+            throw new IllegalArgumentException("Source currency code must not be null.");
+        }
+        this.sourceCurrencyCode = sourceCurrencyCode.toUpperCase();
     }
 
     @ShellMethod(key = "set target", value = "Set target ISO 4217 currency code")
     public void setTarget(String targetCurrencyCode) {
-        this.targetCurrencyCode = targetCurrencyCode;
+        if (targetCurrencyCode == null) {
+            throw new IllegalArgumentException("Target currency code must not be null.");
+        }
+        this.targetCurrencyCode = targetCurrencyCode.toUpperCase();
     }
 
     @ShellMethod(key = "set amount", value = "Set source currency amount")
@@ -34,9 +40,6 @@ public class Commands {
 
     @ShellMethod(key = "run", value = "Runs currency conversion currency")
     public void run() {
-        // Placeholder for conversion logic
-        // You can access sourceCurrencyCode, targetCurrencyCode, and amount here
-        // Implement your conversion logic here and display the result
         double convertedAmount = conversionService.convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount);
         System.out.println("Converted amount: " + convertedAmount + " " + targetCurrencyCode);
         resetInputs();
@@ -48,10 +51,10 @@ public class Commands {
                         @ShellOption(help = "Source currency amount in format x.yy") double amount) {
 
         if (source != null) {
-            setSource(source);
+            setSource(source.toUpperCase());
         }
         if (target != null) {
-            setTarget(target);
+            setTarget(target.toUpperCase());
         }
         if (amount > 0) {
             setAmount(amount);
