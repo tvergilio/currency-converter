@@ -49,7 +49,7 @@ class ConversionControllerIntegrationTest {
     @Test
     void testConvertEndpointWithInvalidSourceCurrency() throws Exception {
         // Arrange
-        var source = "INVALID";
+        var source = "POTATO";
         var target = "EUR";
         double amount = 100.0;
 
@@ -66,7 +66,7 @@ class ConversionControllerIntegrationTest {
     void testConvertEndpointWithInvalidTargetCurrency() throws Exception {
         // Arrange
         var source = "USD";
-        var target = "INVALID";
+        var target = "POTATO";
         double amount = 100.0;
 
         // Act & Assert

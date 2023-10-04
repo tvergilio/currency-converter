@@ -138,7 +138,7 @@ class ConversionServiceTest {
 
     @Test
     public void testValidateInvalidCurrency() {
-        assertThrows(IllegalArgumentException.class, () -> conversionService.validateCurrency("INVALID"));
+        assertThrows(IllegalArgumentException.class, () -> conversionService.validateCurrency("POTATO"));
     }
 
     @Test
