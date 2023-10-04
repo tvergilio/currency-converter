@@ -35,41 +35,6 @@ class ConversionServiceTest {
     }
 
     @Test
-    public void testValidCurrency() {
-        assertDoesNotThrow(() -> conversionService.validateCurrency("USD"));
-    }
-
-    @Test
-    public void testInvalidCurrency() {
-        assertThrows(IllegalArgumentException.class, () -> conversionService.validateCurrency("INVALID"));
-    }
-
-    @Test
-    public void testMixedCaseCurrencyCode() {
-        assertDoesNotThrow(() -> conversionService.validateCurrency("EuR"));
-    }
-
-    @Test
-    public void testLowerCaseCurrencyCode() {
-        assertDoesNotThrow(() -> conversionService.validateCurrency("usd"));
-    }
-
-    @Test
-    public void testNullCurrencyCode() {
-        assertThrows(IllegalArgumentException.class, () -> conversionService.validateCurrency(null));
-    }
-
-    @Test
-    public void testEmptyCurrencyCode() {
-        assertThrows(IllegalArgumentException.class, () -> conversionService.validateCurrency(""));
-    }
-
-    @Test
-    public void testNumericCurrencyCode() {
-        assertThrows(IllegalArgumentException.class, () -> conversionService.validateCurrency("123"));
-    }
-
-    @Test
     void testConvertCurrencyWithValidConversion() {
         // Arrange
         var sourceCurrency = "USD";
@@ -165,5 +130,39 @@ class ConversionServiceTest {
 
         // Assert
         assertEquals(100, convertedAmount);
+    }
+    @Test
+    public void testValidateValidCurrency() {
+        assertDoesNotThrow(() -> conversionService.validateCurrency("USD"));
+    }
+
+    @Test
+    public void testValidateInvalidCurrency() {
+        assertThrows(IllegalArgumentException.class, () -> conversionService.validateCurrency("INVALID"));
+    }
+
+    @Test
+    public void testValidateMixedCaseCurrencyCode() {
+        assertDoesNotThrow(() -> conversionService.validateCurrency("EuR"));
+    }
+
+    @Test
+    public void testValidateLowerCaseCurrencyCode() {
+        assertDoesNotThrow(() -> conversionService.validateCurrency("usd"));
+    }
+
+    @Test
+    public void testValidateNullCurrencyCode() {
+        assertThrows(IllegalArgumentException.class, () -> conversionService.validateCurrency(null));
+    }
+
+    @Test
+    public void testValidateEmptyCurrencyCode() {
+        assertThrows(IllegalArgumentException.class, () -> conversionService.validateCurrency(""));
+    }
+
+    @Test
+    public void testValidateNumericCurrencyCode() {
+        assertThrows(IllegalArgumentException.class, () -> conversionService.validateCurrency("123"));
     }
 }

@@ -41,7 +41,7 @@ public class ConversionService {
                 convertFromGBP(sourceAmountInGBP, targetCurrency);
     }
 
-    void loadExchangeRatesFromCsv() {
+    private void loadExchangeRatesFromCsv() {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ClassPathResource(csvFilePath).getInputStream()))) {
             this.conversionRates = reader.lines()
                     .map(line -> line.split(","))
