@@ -34,3 +34,7 @@ dependencyManagement {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+bootBuildImage {
+	imageName = 'tvergilio/currency-converter'
+}

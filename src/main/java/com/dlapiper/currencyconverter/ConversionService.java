@@ -1,10 +1,11 @@
 package com.dlapiper.currencyconverter;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStreamReader;
 import java.util.Currency;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 public class ConversionService {
 
     private Map<String, Double> conversionRates;
-    String csvFilePath = "classpath:exchange-rates.csv";
+    String csvFilePath = "exchange-rates.csv";
 
     public ConversionService() {
         loadExchangeRatesFromCsv();
@@ -41,8 +42,8 @@ public class ConversionService {
     }
 
     void loadExchangeRatesFromCsv() {
-        try {
-            this.conversionRates = Files.lines(ResourceUtils.getFile(csvFilePath).toPath())
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ClassPathResource(csvFilePath).getInputStream()))) {
+            this.conversionRates = reader.lines()
                     .map(line -> line.split(","))
                     .collect(Collectors.toMap(
                             columns -> columns[2], // Currency code
@@ -50,7 +51,7 @@ public class ConversionService {
                             (existing, replacement) -> replacement //change this later. Needs a proper object because key is not unique.
                     ));
         } catch (IOException e) {
-            throw new ExchangeRateNotFoundException("There was a problem loading the exchange rates CSV file.");
+            throw new ExchangeRateLoadException("There was a problem loading the exchange rates CSV file.", e);
         }
     }
 

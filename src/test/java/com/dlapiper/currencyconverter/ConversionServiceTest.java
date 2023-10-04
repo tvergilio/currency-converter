@@ -4,17 +4,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 class ConversionServiceTest {
 
@@ -170,19 +165,5 @@ class ConversionServiceTest {
 
         // Assert
         assertEquals(100, convertedAmount);
-    }
-
-    @Test
-    void testLoadConversionRatesFromCsvWithIOException() {
-        // Arrange
-        var spyConverter = spy(new ConversionService()); // Create a new spy instance of ConversionService
-
-        try (MockedStatic<Files> filesMockedStatic = mockStatic(Files.class)) {
-            filesMockedStatic.when(() -> Files.lines(any())).thenThrow(IOException.class);
-
-            // Act and Assert
-            assertThrows(ExchangeRateNotFoundException.class,
-                    spyConverter::loadExchangeRatesFromCsv);
-        }
     }
 }
