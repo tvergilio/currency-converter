@@ -6,7 +6,6 @@ import org.springframework.shell.standard.ShellOption;
 
 @ShellComponent
 public class Commands {
-
     private String sourceCurrencyCode;
     private String targetCurrencyCode;
     private Double amount;
@@ -17,8 +16,20 @@ public class Commands {
         this.conversionService = conversionService;
     }
 
+    String getSourceCurrencyCode() {
+        return sourceCurrencyCode;
+    }
+
+    String getTargetCurrencyCode() {
+        return targetCurrencyCode;
+    }
+
+    Double getAmount() {
+        return amount;
+    }
+
     @ShellMethod(key = "set source", value = "Set source ISO 4217 currency code")
-    public void setSource(String sourceCurrencyCode) {
+    public void setSourceCurrencyCode(String sourceCurrencyCode) {
         if (sourceCurrencyCode == null) {
             throw new IllegalArgumentException("Source currency code must not be null.");
         }
@@ -26,7 +37,7 @@ public class Commands {
     }
 
     @ShellMethod(key = "set target", value = "Set target ISO 4217 currency code")
-    public void setTarget(String targetCurrencyCode) {
+    public void setTargetCurrencyCode(String targetCurrencyCode) {
         if (targetCurrencyCode == null) {
             throw new IllegalArgumentException("Target currency code must not be null.");
         }
@@ -51,10 +62,10 @@ public class Commands {
                         @ShellOption(help = "Source currency amount in format x.yy") double amount) {
 
         if (source != null) {
-            setSource(source.toUpperCase());
+            setSourceCurrencyCode(source.toUpperCase());
         }
         if (target != null) {
-            setTarget(target.toUpperCase());
+            setTargetCurrencyCode(target.toUpperCase());
         }
         if (amount > 0) {
             setAmount(amount);
