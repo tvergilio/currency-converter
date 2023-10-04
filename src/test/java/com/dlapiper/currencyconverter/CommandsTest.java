@@ -2,11 +2,14 @@ package com.dlapiper.currencyconverter;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
+@SpringBootTest
 class CommandsTest {
 
     private Commands commands;
@@ -17,6 +20,65 @@ class CommandsTest {
     @BeforeEach
     void setUp() {
         commands = new Commands(conversionService);
+    }
+
+    @Test
+    void testConvertWithValidInput() {
+        // Arrange
+        String sourceCurrencyCode = "USD";
+        String targetCurrencyCode = "EUR";
+        double amount = 100.0;
+        double convertedAmount = 94.0;
+
+        // Mocking behavior of conversionService
+        when(conversionService.convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount)).thenReturn(convertedAmount);
+
+        // Act
+        commands.convert(sourceCurrencyCode, targetCurrencyCode, amount);
+
+        // Verify method calls
+        verify(conversionService, times(1)).convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount);
+        verifyNoMoreInteractions(conversionService);
+    }
+
+    @Test
+    void testConvertWithNullSourceCurrency() {
+        // Arrange
+        String targetCurrencyCode = "EUR";
+        double amount = 100.0;
+
+        // Act
+        commands.convert(null, targetCurrencyCode, amount);
+
+        // Verify method calls
+        verifyNoInteractions(conversionService);
+    }
+
+    @Test
+    void testConvertWithNullTargetCurrency() {
+        // Arrange
+        String sourceCurrencyCode = "USD";
+        double amount = 100.0;
+
+        // Act
+        commands.convert(sourceCurrencyCode, null, amount);
+
+        // Verify method calls
+        verifyNoInteractions(conversionService);
+    }
+
+    @Test
+    void testConvertWithNegativeAmount() {
+        // Arrange
+        String sourceCurrencyCode = "USD";
+        String targetCurrencyCode = "EUR";
+        double amount = -100.0;
+
+        // Act
+        commands.convert(sourceCurrencyCode, targetCurrencyCode, amount);
+
+        // Verify method calls
+        verifyNoInteractions(conversionService);
     }
 
     @Test
@@ -52,6 +114,7 @@ class CommandsTest {
 
         assertEquals("Source currency code must not be null.", exception.getMessage());
     }
+
     @Test
     void testSetTargetWithValidCurrencyCode() {
         // Arrange
@@ -108,5 +171,27 @@ class CommandsTest {
 
         // Assert
         assertEquals(zeroAmount, commands.getAmount());
+    }
+
+    @Test
+    void testRun() {
+        // Arrange
+        String sourceCurrencyCode = "USD";
+        String targetCurrencyCode = "EUR";
+        double amount = 100.0;
+        double convertedAmount = 94.0;
+
+        // Mocking behavior of conversionService
+        when(conversionService.convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount)).thenReturn(convertedAmount);
+
+        // Act
+        commands.setSourceCurrencyCode(sourceCurrencyCode);
+        commands.setTargetCurrencyCode(targetCurrencyCode);
+        commands.setAmount(amount);
+        commands.run();
+
+        // Verify output and method calls
+        verify(conversionService, times(1)).convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount);
+        verifyNoMoreInteractions(conversionService);
     }
 }
