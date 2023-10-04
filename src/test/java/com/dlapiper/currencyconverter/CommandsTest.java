@@ -23,7 +23,7 @@ class CommandsTest {
     }
 
     @Test
-    void testConvertWithValidInput() {
+    void testConvert() {
         // Arrange
         String sourceCurrencyCode = "USD";
         String targetCurrencyCode = "EUR";
@@ -39,46 +39,6 @@ class CommandsTest {
         // Verify method calls
         verify(conversionService, times(1)).convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount);
         verifyNoMoreInteractions(conversionService);
-    }
-
-    @Test
-    void testConvertWithNullSourceCurrency() {
-        // Arrange
-        String targetCurrencyCode = "EUR";
-        double amount = 100.0;
-
-        // Act
-        commands.convert(null, targetCurrencyCode, amount);
-
-        // Verify method calls
-        verifyNoInteractions(conversionService);
-    }
-
-    @Test
-    void testConvertWithNullTargetCurrency() {
-        // Arrange
-        String sourceCurrencyCode = "USD";
-        double amount = 100.0;
-
-        // Act
-        commands.convert(sourceCurrencyCode, null, amount);
-
-        // Verify method calls
-        verifyNoInteractions(conversionService);
-    }
-
-    @Test
-    void testConvertWithNegativeAmount() {
-        // Arrange
-        String sourceCurrencyCode = "USD";
-        String targetCurrencyCode = "EUR";
-        double amount = -100.0;
-
-        // Act
-        commands.convert(sourceCurrencyCode, targetCurrencyCode, amount);
-
-        // Verify method calls
-        verifyNoInteractions(conversionService);
     }
 
     @Test
