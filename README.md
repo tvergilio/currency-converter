@@ -41,3 +41,9 @@ Run the `bootBuildImage` Gradle task
 ### Run the application
 
 `docker run -it -t tvergilio/currency-converter  `
+
+## Exchange Rates
+
+The exchange rates were obtained from: https://www.gov.uk/government/publications/hmrc-exchange-rates-for-2023-monthly
+
+They are read from a static file stored in `src/main/resources/exchange-rates.csv`
