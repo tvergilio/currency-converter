@@ -48,7 +48,7 @@ public class ConversionService {
                     .collect(Collectors.toMap(
                             columns -> columns[2], // Currency code
                             columns -> Double.parseDouble(columns[3]), // Conversion rate to GBP
-                            (existing, replacement) -> replacement //change this later. Needs a proper object because key is not unique.
+                            (existing, replacement) -> replacement // West African Franc is shared amongst 8 independent states, so data could have duplicate keys.
                     ));
         } catch (IOException e) {
             throw new ExchangeRateLoadException("There was a problem loading the exchange rates CSV file.", e);

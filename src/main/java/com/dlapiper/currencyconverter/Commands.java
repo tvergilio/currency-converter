@@ -52,7 +52,7 @@ public class Commands {
     @ShellMethod(key = "run", value = "Runs currency conversion currency")
     public void run() {
         var convertedAmount = conversionService.convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount);
-        System.out.println("Converted amount: " + convertedAmount + " " + targetCurrencyCode);
+        System.out.printf("Converted amount: %.2f " + targetCurrencyCode, convertedAmount);
         resetInputs();
     }
 
