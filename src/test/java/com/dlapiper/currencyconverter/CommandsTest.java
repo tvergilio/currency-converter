@@ -25,10 +25,10 @@ class CommandsTest {
     @Test
     void testConvert() {
         // Arrange
-        String sourceCurrencyCode = "USD";
-        String targetCurrencyCode = "EUR";
-        double amount = 100.0;
-        double convertedAmount = 94.0;
+        var sourceCurrencyCode = "USD";
+        var targetCurrencyCode = "EUR";
+        var amount = 100.0;
+        var convertedAmount = 94.0;
 
         // Mocking behavior of conversionService
         when(conversionService.convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount)).thenReturn(convertedAmount);
@@ -44,7 +44,7 @@ class CommandsTest {
     @Test
     void testSetSourceWithValidCurrencyCode() {
         // Arrange
-        String validCurrencyCode = "USD";
+        var validCurrencyCode = "USD";
 
         // Act
         commands.setSourceCurrencyCode(validCurrencyCode);
@@ -56,7 +56,7 @@ class CommandsTest {
     @Test
     void testSetSourceWithLowerCaseCurrencyCode() {
         // Arrange
-        String lowerCaseCurrencyCode = "usd";
+        var lowerCaseCurrencyCode = "usd";
 
         // Act
         commands.setSourceCurrencyCode(lowerCaseCurrencyCode);
@@ -68,7 +68,7 @@ class CommandsTest {
     @Test
     void testSetSourceWithNullCurrencyCode() {
         // Act and Assert
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        var exception = assertThrows(IllegalArgumentException.class, () -> {
             commands.setSourceCurrencyCode(null);
         });
 
@@ -78,7 +78,7 @@ class CommandsTest {
     @Test
     void testSetTargetWithValidCurrencyCode() {
         // Arrange
-        String validCurrencyCode = "USD";
+        var validCurrencyCode = "USD";
 
         // Act
         commands.setTargetCurrencyCode(validCurrencyCode);
@@ -90,7 +90,7 @@ class CommandsTest {
     @Test
     void testSetTargetWithLowerCaseCurrencyCode() {
         // Arrange
-        String lowerCaseCurrencyCode = "usd";
+        var lowerCaseCurrencyCode = "usd";
 
         // Act
         commands.setTargetCurrencyCode(lowerCaseCurrencyCode);
@@ -102,7 +102,7 @@ class CommandsTest {
     @Test
     void testSetTargetWithNullCurrencyCode() {
         // Act and Assert
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        var exception = assertThrows(IllegalArgumentException.class, () -> {
             commands.setTargetCurrencyCode(null);
         });
 
@@ -112,7 +112,7 @@ class CommandsTest {
     @Test
     void testSetAmountWithValidAmount() {
         // Arrange
-        double validAmount = 100.0;
+        var validAmount = 100.0;
 
         // Act
         commands.setAmount(validAmount);
@@ -124,7 +124,7 @@ class CommandsTest {
     @Test
     void testSetAmountWithZeroAmount() {
         // Arrange
-        double zeroAmount = 0.0;
+        var zeroAmount = 0.0;
 
         // Act
         commands.setAmount(zeroAmount);
@@ -136,10 +136,10 @@ class CommandsTest {
     @Test
     void testRun() {
         // Arrange
-        String sourceCurrencyCode = "USD";
-        String targetCurrencyCode = "EUR";
-        double amount = 100.0;
-        double convertedAmount = 94.0;
+        var sourceCurrencyCode = "USD";
+        var targetCurrencyCode = "EUR";
+        var amount = 100.0;
+        var convertedAmount = 94.0;
 
         // Mocking behavior of conversionService
         when(conversionService.convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount)).thenReturn(convertedAmount);

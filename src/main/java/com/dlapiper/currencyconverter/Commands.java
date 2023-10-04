@@ -51,7 +51,7 @@ public class Commands {
 
     @ShellMethod(key = "run", value = "Runs currency conversion currency")
     public void run() {
-        double convertedAmount = conversionService.convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount);
+        var convertedAmount = conversionService.convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount);
         System.out.println("Converted amount: " + convertedAmount + " " + targetCurrencyCode);
         resetInputs();
     }
