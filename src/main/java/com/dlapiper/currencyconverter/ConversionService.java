@@ -1,5 +1,6 @@
 package com.dlapiper.currencyconverter;
 
+import com.dlapiper.currencyconverter.model.ExchangeRate;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -7,20 +8,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Currency;
-import java.util.Map;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class ConversionService {
 
-    private Map<String, Double> conversionRates;
+    private List<ExchangeRate> conversionRates;
     String csvFilePath = "exchange-rates.csv";
 
     public ConversionService() {
         loadExchangeRatesFromCsv();
     }
 
-    public ConversionService(Map<String, Double> conversionRates) {
+    public ConversionService(List<ExchangeRate> conversionRates) {
         this.conversionRates = conversionRates;
     }
 
@@ -44,12 +45,11 @@ public class ConversionService {
     private void loadExchangeRatesFromCsv() {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ClassPathResource(csvFilePath).getInputStream()))) {
             this.conversionRates = reader.lines()
-                    .map(line -> line.split(","))
-                    .collect(Collectors.toMap(
-                            columns -> columns[2], // Currency code
-                            columns -> Double.parseDouble(columns[3]), // Conversion rate to GBP
-                            (existing, replacement) -> replacement // West African Franc is shared amongst 8 independent states, so data could have duplicate keys.
-                    ));
+                    .map(line -> {
+                        String[] columns = line.split(",");
+                        return new ExchangeRate(columns[0], columns[1], columns[2], Double.parseDouble(columns[3]));
+                    })
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             throw new ExchangeRateLoadException("There was a problem loading the exchange rates CSV file.", e);
         }
@@ -68,19 +68,28 @@ public class ConversionService {
         }
     }
 
+    private ExchangeRate getExchangeRateByCurrencyCode(String currencyCode) {
+        return conversionRates.stream()
+                .filter(rate -> rate.currencyCode().equalsIgnoreCase(currencyCode))
+                .findFirst()
+                .orElse(null);
+    }
+
     private double convertToGBP(String currencyCode, double amount) {
-        if (!conversionRates.containsKey(currencyCode)) {
+        var exchangeRate = getExchangeRateByCurrencyCode(currencyCode);
+        if (exchangeRate == null) {
             throw new IllegalArgumentException("Conversion rate not found for currency code: " + currencyCode);
         }
-        double rateToGBP = conversionRates.get(currencyCode);
+        var rateToGBP = exchangeRate.rate();
         return amount / rateToGBP;
     }
 
     private double convertFromGBP(double sourceAmountInGBP, String targetCurrency) {
-        if (!conversionRates.containsKey(targetCurrency)) {
+        var exchangeRate = getExchangeRateByCurrencyCode(targetCurrency);
+        if (exchangeRate == null) {
             throw new IllegalArgumentException("Conversion rate not found for currency code: " + targetCurrency);
         }
-        double rateFromGBP = conversionRates.get(targetCurrency);
+        var rateFromGBP = exchangeRate.rate();
         return sourceAmountInGBP * rateFromGBP;
     }
 }

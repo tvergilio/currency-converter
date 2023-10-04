@@ -1,13 +1,14 @@
 package com.dlapiper.currencyconverter;
 
+import com.dlapiper.currencyconverter.model.ExchangeRate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,18 +18,18 @@ class ConversionServiceTest {
     private ConversionService conversionService;
 
     @Mock
-    private Map<String, Double> mockConversionRates;
+    private List<ExchangeRate> mockConversionRates;
 
     @BeforeEach
     void setUp() {
         // Initialize mocks
         MockitoAnnotations.openMocks(this);
 
-        // Creating mock conversion rates
-        mockConversionRates = new HashMap<>();
-        mockConversionRates.put("USD", 1.23);
-        mockConversionRates.put("EUR", 1.16);
-        mockConversionRates.put("AED", 4.54);
+        // Creating mock conversion rates as a List of ExchangeRate objects
+        mockConversionRates = Arrays.asList(
+        new ExchangeRate("USA", "Dollar", "USD", 1.23),
+        new ExchangeRate("Eurozone", "Euro", "EUR", 1.16),
+        new ExchangeRate("Abu Dhabi", "Dirham", "AED", 4.54));
 
         // Creating the ConversionService instance with mock conversion rates
         conversionService = new ConversionService(mockConversionRates);
