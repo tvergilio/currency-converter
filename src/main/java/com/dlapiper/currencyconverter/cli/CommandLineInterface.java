@@ -1,5 +1,6 @@
-package com.dlapiper.currencyconverter;
+package com.dlapiper.currencyconverter.cli;
 
+import com.dlapiper.currencyconverter.ConversionService;
 import com.dlapiper.currencyconverter.model.Conversion;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;

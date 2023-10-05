@@ -1,5 +1,6 @@
-package com.dlapiper.currencyconverter;
+package com.dlapiper.currencyconverter.cli;
 
+import com.dlapiper.currencyconverter.ConversionService;
 import com.dlapiper.currencyconverter.model.Conversion;
 import com.dlapiper.currencyconverter.model.Country;
 import org.junit.jupiter.api.BeforeEach;
