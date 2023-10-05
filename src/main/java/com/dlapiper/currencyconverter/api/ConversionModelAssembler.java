@@ -1,6 +1,5 @@
 package com.dlapiper.currencyconverter.api;
 
-import com.dlapiper.currencyconverter.api.ConversionDTO;
 import com.dlapiper.currencyconverter.model.Conversion;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
@@ -15,7 +14,7 @@ public class ConversionModelAssembler implements RepresentationModelAssembler<Co
     }
 
     private ConversionDTO createConversionDTO(Conversion conversion) {
-        String resultFormatted = String.format("%.2f %s %s",
+        String resultFormatted = String.format(Conversion.RESULT_FORMAT,
                 conversion.getResult(), conversion.target().getName(), conversion.target().getCurrencyName());
 
         return new ConversionDTO(

@@ -198,9 +198,6 @@ public enum Country {
     public boolean matchesName(String searchTerm) {
         return name.equals(searchTerm);
     }
-    public boolean matchesCurrencyName(String searchTerm) {
-        return currencyName.equals(searchTerm);
-    }
 
     @FunctionalInterface
     interface CountryFinder {
@@ -220,9 +217,6 @@ public enum Country {
 
     public static Country findCountryByName(String name) {
         return findByProperty(name, Country::matchesName);
-    }
-    public static Country findCountryByCurrencyName(String currencyName) {
-        return findByProperty(currencyName, Country::matchesCurrencyName);
     }
 
 }

@@ -71,9 +71,8 @@ class CommandLineInterfaceTest {
     @Test
     void testSetSourceWithNullCurrencyCode() {
         // Act and Assert
-        var exception = assertThrows(IllegalArgumentException.class, () -> {
-            commandLineInterface.setSourceCurrencyCode(null);
-        });
+        var exception = assertThrows(IllegalArgumentException.class,
+                () -> commandLineInterface.setSourceCurrencyCode(null));
 
         assertEquals("Source currency code must not be null.", exception.getMessage());
     }
@@ -105,9 +104,8 @@ class CommandLineInterfaceTest {
     @Test
     void testSetTargetWithNullCurrencyCode() {
         // Act and Assert
-        var exception = assertThrows(IllegalArgumentException.class, () -> {
-            commandLineInterface.setTargetCurrencyCode(null);
-        });
+        var exception = assertThrows(IllegalArgumentException.class,
+                () -> commandLineInterface.setTargetCurrencyCode(null));
 
         assertEquals("Target currency code must not be null.", exception.getMessage());
     }

@@ -1,5 +1,6 @@
 package com.dlapiper.currencyconverter;
 
+import com.dlapiper.currencyconverter.model.Conversion;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -53,7 +54,7 @@ public class CommandLineInterface {
     public void run() {
         var conversion = conversionService.convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount);
         var target = conversion.target();
-        System.out.printf("Converted amount: %.2f %s %s", conversion.amount(), target.getName(), target.getCurrencyName());
+        System.out.printf(Conversion.RESULT_FORMAT, conversion.result(), target.getName(), target.getCurrencyName());
         resetInputs();
     }
 
@@ -79,5 +80,4 @@ public class CommandLineInterface {
         targetCurrencyCode = null;
         amount = null;
     }
-
 }

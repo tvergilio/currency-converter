@@ -58,9 +58,8 @@ class ConversionServiceTest {
         var targetCurrency = "POTATO";
 
         // Act and Assert
-        var exception = assertThrows(IllegalArgumentException.class, () -> {
-            conversionService.convertCurrency(sourceCurrency, targetCurrency, sourceAmountInGBP);
-        });
+        var exception = assertThrows(IllegalArgumentException.class,
+                () -> conversionService.convertCurrency(sourceCurrency, targetCurrency, sourceAmountInGBP));
 
         assertEquals("Invalid currency code: POTATO", exception.getMessage());
     }
