@@ -51,15 +51,15 @@ public class CommandLineInterface {
     }
 
     @ShellMethod(key = "run", value = "Runs currency conversion based on preset values")
-    public void run() {
+    public String run() {
         var conversion = conversionService.convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount);
         var target = conversion.target();
-        System.out.printf((Conversion.RESULT_FORMAT) + "%n", conversion.result(), target.getName(), target.getCurrencyName());
         resetInputs();
+        return String.format((Conversion.RESULT_FORMAT) + "%n", conversion.result(), target.getName(), target.getCurrencyName());
     }
 
     @ShellMethod(key = "convert", value = "Performs conversion with a one-line command")
-    public void convert(@ShellOption(help = "Source ISO 4217 currency code") String source,
+    public String convert(@ShellOption(help = "Source ISO 4217 currency code") String source,
                         @ShellOption(help = "Target ISO 4217 currency code") String target,
                         @ShellOption(help = "Source currency amount in format x.yy") double amount) {
 
@@ -72,7 +72,7 @@ public class CommandLineInterface {
         if (amount > 0) {
             setAmount(amount);
         }
-        run();
+        return run();
     }
 
     private void resetInputs() {
