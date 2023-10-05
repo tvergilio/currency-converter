@@ -50,15 +50,15 @@ public class CommandLineInterface {
         this.amount = amount;
     }
 
-    @ShellMethod(key = "run", value = "Runs currency conversion currency")
+    @ShellMethod(key = "run", value = "Runs currency conversion based on preset values")
     public void run() {
         var conversion = conversionService.convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount);
         var target = conversion.target();
-        System.out.printf(Conversion.RESULT_FORMAT, conversion.result(), target.getName(), target.getCurrencyName());
+        System.out.printf((Conversion.RESULT_FORMAT) + "%n", conversion.result(), target.getName(), target.getCurrencyName());
         resetInputs();
     }
 
-    @ShellMethod(key = "convert", value = "Converts currency")
+    @ShellMethod(key = "convert", value = "Performs conversion with a one-line command")
     public void convert(@ShellOption(help = "Source ISO 4217 currency code") String source,
                         @ShellOption(help = "Target ISO 4217 currency code") String target,
                         @ShellOption(help = "Source currency amount in format x.yy") double amount) {
