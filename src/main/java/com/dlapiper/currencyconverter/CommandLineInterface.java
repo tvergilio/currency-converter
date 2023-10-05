@@ -5,14 +5,14 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 @ShellComponent
-public class Commands {
+public class CommandLineInterface {
     private String sourceCurrencyCode;
     private String targetCurrencyCode;
     private Double amount;
 
     private final ConversionService conversionService;
 
-    public Commands(ConversionService conversionService) {
+    public CommandLineInterface(ConversionService conversionService) {
         this.conversionService = conversionService;
     }
 
@@ -51,8 +51,9 @@ public class Commands {
 
     @ShellMethod(key = "run", value = "Runs currency conversion currency")
     public void run() {
-        var convertedAmount = conversionService.convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount);
-        System.out.printf("Converted amount: %.2f %s", convertedAmount, targetCurrencyCode);
+        var conversion = conversionService.convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount);
+        var target = conversion.target();
+        System.out.printf("Converted amount: %.2f %s %s", conversion.amount(), target.getName(), target.getCurrencyName());
         resetInputs();
     }
 

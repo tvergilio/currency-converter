@@ -1,5 +1,7 @@
 package com.dlapiper.currencyconverter;
 
+import com.dlapiper.currencyconverter.model.Conversion;
+import com.dlapiper.currencyconverter.model.Country;
 import com.dlapiper.currencyconverter.model.ExchangeRate;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
@@ -25,21 +27,40 @@ public class ConversionService {
         this.conversionRates = conversionRates;
     }
 
-    public double convertCurrency(String sourceCurrency, String targetCurrency, double amount) {
+    public Conversion convertCurrency(String sourceCurrency, String targetCurrency, double amount) {
         validateCurrency(sourceCurrency);
         validateCurrency(targetCurrency);
         validateAmount(amount);
 
         if (sourceCurrency.equalsIgnoreCase(targetCurrency)) {
-            return amount; // No conversion needed if source and target currencies are the same
+            return createConversionWithSameCurrencies(sourceCurrency, amount);
         }
 
-        double sourceAmountInGBP;
-        sourceAmountInGBP = sourceCurrency.equalsIgnoreCase("GBP") ? amount : convertToGBP(sourceCurrency, amount);
+        var sourceAmountInGBP = getSourceAmountInGBP(sourceCurrency, amount);
+        var result = getResult(sourceAmountInGBP, targetCurrency);
 
+        return createConversion(sourceCurrency, targetCurrency, amount, result);
+    }
+
+    private Conversion createConversionWithSameCurrencies(String currencyCode, double amount) {
+        var country = Country.findCountryByCurrencyCode(currencyCode);
+        return new Conversion(country, country, amount, amount);
+    }
+
+    private double getSourceAmountInGBP(String sourceCurrency, double amount) {
+        return sourceCurrency.equalsIgnoreCase("GBP") ? amount : convertToGBP(sourceCurrency, amount);
+    }
+
+    private double getResult(double sourceAmountInGBP, String targetCurrency) {
         return targetCurrency.equalsIgnoreCase("GBP") ?
                 sourceAmountInGBP :
                 convertFromGBP(sourceAmountInGBP, targetCurrency);
+    }
+
+    private Conversion createConversion(String sourceCurrency, String targetCurrency, double amount, double result) {
+        var sourceCountry = Country.findCountryByCurrencyCode(sourceCurrency);
+        var targetCountry = Country.findCountryByCurrencyCode(targetCurrency);
+        return new Conversion(sourceCountry, targetCountry, amount, result);
     }
 
     private void loadExchangeRatesFromCsv() {
@@ -47,7 +68,7 @@ public class ConversionService {
             this.conversionRates = reader.lines()
                     .map(line -> {
                         String[] columns = line.split(",");
-                        return new ExchangeRate(columns[0], columns[1], columns[2], Double.parseDouble(columns[3]));
+                        return new ExchangeRate(Country.findCountryByName(columns[0]), Double.parseDouble(columns[3]));
                     })
                     .collect(Collectors.toList());
         } catch (IOException e) {
@@ -70,7 +91,7 @@ public class ConversionService {
 
     private ExchangeRate getExchangeRateByCurrencyCode(String currencyCode) {
         return conversionRates.stream()
-                .filter(rate -> rate.currencyCode().equalsIgnoreCase(currencyCode))
+                .filter(rate -> rate.country().getCurrencyCode().equalsIgnoreCase(currencyCode))
                 .findFirst()
                 .orElse(null);
     }

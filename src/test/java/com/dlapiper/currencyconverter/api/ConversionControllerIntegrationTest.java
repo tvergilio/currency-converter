@@ -1,7 +1,5 @@
 package com.dlapiper.currencyconverter.api;
 
-import com.dlapiper.currencyconverter.ConversionService;
-import com.dlapiper.currencyconverter.model.ConversionModelAssembler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,14 +15,6 @@ class ConversionControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private ConversionService conversionService;
-
-    @Autowired
-    private ConversionModelAssembler assembler;
-
-    // Test cases
 
     @Test
     void testConvertEndpointWithValidInput() throws Exception {

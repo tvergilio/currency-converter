@@ -1,5 +1,6 @@
 package com.dlapiper.currencyconverter;
 
+import com.dlapiper.currencyconverter.model.Country;
 import com.dlapiper.currencyconverter.model.ExchangeRate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,9 +28,9 @@ class ConversionServiceTest {
 
         // Creating mock conversion rates as a List of ExchangeRate objects
         mockConversionRates = Arrays.asList(
-        new ExchangeRate("USA", "Dollar", "USD", 1.23),
-        new ExchangeRate("Eurozone", "Euro", "EUR", 1.16),
-        new ExchangeRate("Abu Dhabi", "Dirham", "AED", 4.54));
+        new ExchangeRate(Country.USA, 1.23),
+        new ExchangeRate(Country.EUROZONE, 1.16),
+        new ExchangeRate(Country.ABU_DHABI, 4.54));
 
         // Creating the ConversionService instance with mock conversion rates
         conversionService = new ConversionService(mockConversionRates);
@@ -43,10 +44,10 @@ class ConversionServiceTest {
         var amount = 100;
 
         // Act
-        var convertedAmount = conversionService.convertCurrency(sourceCurrency, targetCurrency, amount);
+        var conversion = conversionService.convertCurrency(sourceCurrency, targetCurrency, amount);
 
         // Assert
-        assertEquals(94.30, convertedAmount, 0.01);
+        assertEquals(94.30, conversion.result(), 0.01);
     }
 
     @Test
@@ -86,10 +87,10 @@ class ConversionServiceTest {
         var sourceAmountInUSD = 100;
 
         // Act
-        var convertedAmount = conversionService.convertCurrency(sourceCurrency, targetCurrency, sourceAmountInUSD);
+        var conversion = conversionService.convertCurrency(sourceCurrency, targetCurrency, sourceAmountInUSD);
 
         // Assert
-        assertEquals(81.30, convertedAmount, 0.01);
+        assertEquals(81.30, conversion.result(), 0.01);
     }
 
     @Test
@@ -127,10 +128,10 @@ class ConversionServiceTest {
         var amount = 100;
 
         // Act
-        var convertedAmount = conversionService.convertCurrency(sourceCurrency, targetCurrency, amount);
+        var conversion = conversionService.convertCurrency(sourceCurrency, targetCurrency, amount);
 
         // Assert
-        assertEquals(100, convertedAmount);
+        assertEquals(100, conversion.result());
     }
     @Test
     public void testValidateValidCurrency() {

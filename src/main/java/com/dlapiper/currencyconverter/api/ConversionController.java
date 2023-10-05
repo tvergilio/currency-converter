@@ -1,8 +1,6 @@
 package com.dlapiper.currencyconverter.api;
 
 import com.dlapiper.currencyconverter.ConversionService;
-import com.dlapiper.currencyconverter.model.Conversion;
-import com.dlapiper.currencyconverter.model.ConversionModelAssembler;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.hateoas.EntityModel;
@@ -24,11 +22,11 @@ public class ConversionController {
     }
 
     @PostMapping("/api/convert")
-    public EntityModel<Conversion> convert(@NotNull @NotEmpty String source,
-                                           @NotNull @NotEmpty String target,
-                                           @NotNull @NotEmpty Double amount) {
+    public EntityModel<ConversionDTO> convert(@NotNull @NotEmpty String source,
+                                              @NotNull @NotEmpty String target,
+                                              @NotNull @NotEmpty Double amount) {
         var result = conversionService.convertCurrency(source, target, amount);
-        return assembler.toModel(new Conversion(source, target, amount, result));
+        return assembler.toModel(result);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

@@ -1,5 +1,7 @@
 package com.dlapiper.currencyconverter;
 
+import com.dlapiper.currencyconverter.model.Conversion;
+import com.dlapiper.currencyconverter.model.Country;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,16 +12,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-class CommandsTest {
+class CommandLineInterfaceTest {
 
-    private Commands commands;
+    private CommandLineInterface commandLineInterface;
 
     @MockBean
     private ConversionService conversionService;
 
     @BeforeEach
     void setUp() {
-        commands = new Commands(conversionService);
+        commandLineInterface = new CommandLineInterface(conversionService);
     }
 
     @Test
@@ -29,12 +31,13 @@ class CommandsTest {
         var targetCurrencyCode = "EUR";
         var amount = 100.0;
         var convertedAmount = 94.0;
+        var conversion = new Conversion(Country.USA, Country.EUROZONE, amount, convertedAmount);
 
         // Mocking behavior of conversionService
-        when(conversionService.convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount)).thenReturn(convertedAmount);
+        when(conversionService.convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount)).thenReturn(conversion);
 
         // Act
-        commands.convert(sourceCurrencyCode, targetCurrencyCode, amount);
+        commandLineInterface.convert(sourceCurrencyCode, targetCurrencyCode, amount);
 
         // Verify method calls
         verify(conversionService, times(1)).convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount);
@@ -47,10 +50,10 @@ class CommandsTest {
         var validCurrencyCode = "USD";
 
         // Act
-        commands.setSourceCurrencyCode(validCurrencyCode);
+        commandLineInterface.setSourceCurrencyCode(validCurrencyCode);
 
         // Assert
-        assertEquals(validCurrencyCode.toUpperCase(), commands.getSourceCurrencyCode());
+        assertEquals(validCurrencyCode.toUpperCase(), commandLineInterface.getSourceCurrencyCode());
     }
 
     @Test
@@ -59,17 +62,17 @@ class CommandsTest {
         var lowerCaseCurrencyCode = "usd";
 
         // Act
-        commands.setSourceCurrencyCode(lowerCaseCurrencyCode);
+        commandLineInterface.setSourceCurrencyCode(lowerCaseCurrencyCode);
 
         // Assert
-        assertEquals(lowerCaseCurrencyCode.toUpperCase(), commands.getSourceCurrencyCode());
+        assertEquals(lowerCaseCurrencyCode.toUpperCase(), commandLineInterface.getSourceCurrencyCode());
     }
 
     @Test
     void testSetSourceWithNullCurrencyCode() {
         // Act and Assert
         var exception = assertThrows(IllegalArgumentException.class, () -> {
-            commands.setSourceCurrencyCode(null);
+            commandLineInterface.setSourceCurrencyCode(null);
         });
 
         assertEquals("Source currency code must not be null.", exception.getMessage());
@@ -81,10 +84,10 @@ class CommandsTest {
         var validCurrencyCode = "USD";
 
         // Act
-        commands.setTargetCurrencyCode(validCurrencyCode);
+        commandLineInterface.setTargetCurrencyCode(validCurrencyCode);
 
         // Assert
-        assertEquals(validCurrencyCode.toUpperCase(), commands.getTargetCurrencyCode());
+        assertEquals(validCurrencyCode.toUpperCase(), commandLineInterface.getTargetCurrencyCode());
     }
 
     @Test
@@ -93,17 +96,17 @@ class CommandsTest {
         var lowerCaseCurrencyCode = "usd";
 
         // Act
-        commands.setTargetCurrencyCode(lowerCaseCurrencyCode);
+        commandLineInterface.setTargetCurrencyCode(lowerCaseCurrencyCode);
 
         // Assert
-        assertEquals(lowerCaseCurrencyCode.toUpperCase(), commands.getTargetCurrencyCode());
+        assertEquals(lowerCaseCurrencyCode.toUpperCase(), commandLineInterface.getTargetCurrencyCode());
     }
 
     @Test
     void testSetTargetWithNullCurrencyCode() {
         // Act and Assert
         var exception = assertThrows(IllegalArgumentException.class, () -> {
-            commands.setTargetCurrencyCode(null);
+            commandLineInterface.setTargetCurrencyCode(null);
         });
 
         assertEquals("Target currency code must not be null.", exception.getMessage());
@@ -115,10 +118,10 @@ class CommandsTest {
         var validAmount = 100.0;
 
         // Act
-        commands.setAmount(validAmount);
+        commandLineInterface.setAmount(validAmount);
 
         // Assert
-        assertEquals(validAmount, commands.getAmount());
+        assertEquals(validAmount, commandLineInterface.getAmount());
     }
 
     @Test
@@ -127,10 +130,10 @@ class CommandsTest {
         var zeroAmount = 0.0;
 
         // Act
-        commands.setAmount(zeroAmount);
+        commandLineInterface.setAmount(zeroAmount);
 
         // Assert
-        assertEquals(zeroAmount, commands.getAmount());
+        assertEquals(zeroAmount, commandLineInterface.getAmount());
     }
 
     @Test
@@ -140,15 +143,16 @@ class CommandsTest {
         var targetCurrencyCode = "EUR";
         var amount = 100.0;
         var convertedAmount = 94.0;
+        var conversion = new Conversion(Country.USA, Country.EUROZONE, amount, convertedAmount);
 
         // Mocking behavior of conversionService
-        when(conversionService.convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount)).thenReturn(convertedAmount);
+        when(conversionService.convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount)).thenReturn(conversion);
 
         // Act
-        commands.setSourceCurrencyCode(sourceCurrencyCode);
-        commands.setTargetCurrencyCode(targetCurrencyCode);
-        commands.setAmount(amount);
-        commands.run();
+        commandLineInterface.setSourceCurrencyCode(sourceCurrencyCode);
+        commandLineInterface.setTargetCurrencyCode(targetCurrencyCode);
+        commandLineInterface.setAmount(amount);
+        commandLineInterface.run();
 
         // Verify output and method calls
         verify(conversionService, times(1)).convertCurrency(sourceCurrencyCode, targetCurrencyCode, amount);
