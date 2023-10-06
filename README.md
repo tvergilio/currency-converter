@@ -6,11 +6,11 @@ This is a simple currency converter application built using Spring Boot and JDK-
 This is a simple implementation composed of: 1) a conversion service containing the main application logic,  and 2) domain classes used to model the data entities such as countries, exchange rates and conversions. It exposes a CLI interface and a REST API.
 ![component diagram](src/main/resources/currencyconverter.png "Class Diagram")
 
-The conversion service orchestrates the conversion process, utilising the domain classes to represent and manipulate currency-related information.
+The conversion service orchestrates the conversion process. It uses the domain classes to represent and manipulate currency-related information.
 
-The domain classes adhere to strong object-oriented principles, encapsulating data and behavior related to currencies.
+The domain classes adhere to strong object-oriented principles, encapsulating data and behaviour related to currencies.
 
-This approach ensures a structured and organised way to handle currency conversions, promoting modularity, reusability, and maintainability.
+This approach ensures a structured and organised way to handle currency conversions, promoting modularity, reusability and maintainability.
 
 ## Command Line Interface
 The command line interface is implemented using Spring Shell. It supports the following interactions:
@@ -57,10 +57,33 @@ Run the `bootBuildImage` Gradle task
 
 `docker run -p 80:8080 -it -t tvergilio/currency-converter`
 
-(the port publishing is for the REST API)
-
 ## Exchange Rate Data
 
 The exchange rates were obtained from: https://www.gov.uk/government/publications/hmrc-exchange-rates-for-2023-monthly
 
 They are read from a static file stored in `src/main/resources/exchange-rates.csv`
+
+## Deployment Information
+
+This cloud-native application has been deployed to AWS and is available for demonstration upon request.
+
+## License
+Copyright (c) 2021 Thalita Vergilio
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
