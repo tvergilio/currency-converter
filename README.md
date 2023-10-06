@@ -33,14 +33,31 @@ where amount is in the format 0.00.
 #### Execute the conversion:
 `run`
 
-## Docker
+## REST API
+The application exposes a simple RESTful API for integration with other services. 
+
+![component diagram](src/main/resources/api-demo.png "REST API Example")
+
+## Project Organisation
+This is a simple implementation composed of: 1) a conversion service containing the main application logic,  and 2) domain classes used to model the data entities such as countries, exchange rates and conversions. It exposes a CLI interface and a REST API.
+![component diagram](src/main/resources/currencyconverter.png "Class Diagram")
+
+The conversion service orchestrates the conversion process, utilising the domain classes to represent and manipulate currency-related information. 
+
+The domain classes adhere to industry-standard object-oriented principles, encapsulating data and behavior related to currencies. 
+
+This approach ensures a structured and organised way to handle currency conversions, promoting modularity, reusability, and maintainability.
+
+## Run using Docker
 ### Build the image
 
 Run the `bootBuildImage` Gradle task
 
 ### Run the application
 
-`docker run -it -t tvergilio/currency-converter  `
+`docker run -p 80:8080 -it -t tvergilio/currency-converter`
+
+(the port publishing is for the REST API)
 
 ## Exchange Rates
 
