@@ -21,6 +21,8 @@ The command line interface is implemented using Spring Shell. It supports the fo
 
 where source and target are ISO 4217 currency codes, and amount is in the format 0.00.
 
+![one-line-conversion](src/main/resources/one-line-conversion.png "One-line conversion")
+
 ### 2. Step-by-step currency conversion: 
 
 This allows the amount, source and target currencies to be set independently before the conversion is executed.
@@ -42,6 +44,12 @@ where amount is in the format 0.00.
 
 #### Execute the conversion:
 `run`
+
+![multiline-conversion](src/main/resources/multiline-conversion.png "Step-by-step conversion")
+
+### 3. Help:
+The CLI provides built-in as well as custom help documentation.
+![command-help](src/main/resources/command-help.png "Command help")
 
 ## REST API
 The application exposes a simple RESTful API for integration with other services. 
