@@ -68,7 +68,7 @@ They are read from a static file stored in `src/main/resources/exchange-rates.cs
 This cloud-native application has been deployed to AWS and is available for demonstration upon request.
 
 ## License
-Copyright (c) 2021 Thalita Vergilio
+Copyright (c) 2023 Thalita Vergilio
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
