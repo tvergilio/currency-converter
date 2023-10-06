@@ -59,7 +59,9 @@ The application exposes a simple RESTful API for integration with other services
 ## Run using Docker
 ### Build the image
 
-Run the `bootBuildImage` Gradle task
+Run the `bootBuildImage` Gradle task.
+
+Alternatively, the latest image can be downloaded from [DockerHub](https://hub.docker.com/repository/docker/tvergilio/currency-converter/general).
 
 ### Run the application
 
